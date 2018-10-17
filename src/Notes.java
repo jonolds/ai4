@@ -7,7 +7,7 @@ public class Notes {
 	
 	
 	int minimax(byte[] node, int depth, boolean maxTurn) {
-		if(depth == 0) //or node is a terminal node then
+		if(depth == 9)
 			return 9999; //the heuristic value of node
 		if(maxTurn) {
 			int value = Integer.MIN_VALUE;
@@ -24,7 +24,16 @@ public class Notes {
 			return value;
 		}
 	}
-
+	
+	
+	int getWinner(byte[] s) {
+		byte[] win_rows = new byte[] {s[0],s[1],s[2],  s[3],s[4],s[5],  s[6],s[7],s[8],  s[0],s[3],s[6],
+									  s[1],s[4],s[7],  s[2],s[5],s[8],  s[0],s[4],s[8],  s[2],s[4],s[6]};
+		for(int i = 0; i < 24; i+=3)
+			if(win_rows[i] > 59 && win_rows[i]==win_rows[i+1] && win_rows[i]==win_rows[i+2])
+				return (win_rows[i] == 'O') ? 1 : -1;
+		return 0;
+	}
 
 
 }
