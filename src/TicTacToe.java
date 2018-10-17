@@ -4,7 +4,10 @@ public class TicTacToe {
 	Scanner sc;
 	byte[] board = new byte[] {1,2,3,4,5,6,7,8,9};
 
-	void setX(int pos) { board[pos] = 'X'; }
+	int move_count = 0;
+
+	void setX(int pos) { board[pos] = 'X'; move_count++;}
+	void setO(int pos) { board[pos] = 'O'; move_count++;}
 	byte[] getStCopy() { return board.clone(); }
 	byte[] getStCopy(byte[] bArr) { return bArr.clone(); }
 	
@@ -24,21 +27,7 @@ public class TicTacToe {
 		}
 		return 0;
 	}
-//	function minimax(node, depth, maximizingPlayer) is
-//    if depth = 0 or node is a terminal node then
-//        return the heuristic value of node
-//    if maximizingPlayer then
-//        value := −∞
-//        for each child of node do
-//            value := max(value, minimax(child, depth − 1, FALSE))
-//        return value
-//    else (* minimizing player *)
-//        value := +∞
-//        for each child of node do
-//            value := min(value, minimax(child, depth − 1, TRUE))
-//        return value
-//(* Initial call *)
-//minimax(origin, depth, TRUE)
+
 
 	void play() {
 		drawBoard();
@@ -47,7 +36,6 @@ public class TicTacToe {
 		for(int i = 0; i < 4; i++) {
 			humanMove();
 			drawBoard();
-			
 		}
 		sc.close();
 	}
@@ -60,7 +48,7 @@ public class TicTacToe {
 			char input = sc.next().charAt(0);
 			if(Character.isDigit(input))					//CHECK that char(0) is a digit
 				pos = Character.digit(input, 10);
-			if(!(pos > 0 && pos < 10))						//CHECK that pos input is from 1 to 9
+			if(!(pos > 0 && pos < 10))						//CHECK pos input range: 1 to 9
 				System.out.println("Move input must be an integer from 1 to 9.");
 			else if(board[pos-1] > 58)						//CHECK that pos-1 isn't taken
 				System.out.println("position " + (pos) + " already taken.");
@@ -88,7 +76,8 @@ public class TicTacToe {
 		System.out.println("---+---+---");
 		System.out.println(" " + ch(board[6]) + " | " + ch(board[7]) + " | " + ch(board[8]) + " ");
 	}
-	String ch(byte b) { return (b < 58) ? Byte.toString(b) : (b == 88) ? "X" : "O"; }
+	char ch(byte b) { return (b < 58) ? Byte.toString(b).charAt(0) : (char)b; }
+
 	public static void main(String[] args) {
 		TicTacToe game = new TicTacToe();
 		game.sc = new Scanner(System.in);
