@@ -6,16 +6,6 @@ public class TicTacToe {
 	byte[] board = new byte[] {1,2,3,4,5,6,7,8,9};
 
 	void play() {
-		byte[] test1 = getStCopy(board);
-		test1[3] = 'q';
-		System.out.print("\ntest1: ");
-		for(int i = 0; i < 9; i++)
-			System.out.print(test1[i] + ", ");
-		System.out.print("\nboard: ");
-		for(int i = 0; i < 9; i++)
-			System.out.print(board[i] + ", ");
-		
-		
 		drawBoard();
 		humanMove();
 		for(int i = 0; i < 4; i++) {
@@ -23,10 +13,14 @@ public class TicTacToe {
 			drawBoard();
 			humanMove();
 		}
+		results();
+	}
+	
+	void results() {
 		System.out.println("\n***FINAL BOARD***");
 		drawBoard();
 		System.out.println("moves_left: " + moves_left);
-		System.out.println("winner: " + getWinner(board));
+		System.out.println("winner: " + getWinner(board) + "\n");
 		sc.close();
 	}
 	
@@ -42,13 +36,12 @@ public class TicTacToe {
 		if(maxTurn) {
 			int value = Integer.MIN_VALUE;
 			for(int i = 0; i < 9; i++) 	// each child of node do
-				if(board[i] < 59) {
+				if(node[i] < 59) {
 					int mm_value = minimax(node, depth-1, false, false);
 					if(mm_value > value) {
 						value = mm_value;
 						best_move = i;
 					}
-					value = Math.max(value, minimax(node, depth-1, false, false));
 				}
 			if(top)
 				return best_move;
@@ -58,7 +51,7 @@ public class TicTacToe {
 		else {
 			int value = Integer.MAX_VALUE;
 			for(int i = 0; i < 9; i++)
-				if(board[i] < 59) {
+				if(node[i] < 59) {
 					int mm_value = minimax(node, depth-1, true, false);
 					if(mm_value < value) {
 						value = mm_value;
@@ -127,3 +120,13 @@ public class TicTacToe {
 		game.play();
 	}
 }
+
+
+//byte[] test1 = getStCopy(board);
+//test1[3] = 'q';
+//System.out.print("\ntest1: ");
+//for(int i = 0; i < 9; i++)
+//	System.out.print(test1[i] + ", ");
+//System.out.print("\nboard: ");
+//for(int i = 0; i < 9; i++)
+//	System.out.print(board[i] + ", ");
