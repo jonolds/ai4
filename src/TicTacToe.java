@@ -103,9 +103,9 @@ public class TicTacToe {
 //		System.out.print("Your move: " + pos+1);
 		setX(board, pos);
 	}
-	
+	//WRONG!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	void humanBot() {
-		setX(board, minimax(copyBoard(board), moves_left, true, true));
+		setX(board, minimax(copyBoard(board), moves_left, false, true));
 	}
 	
 	void setX(byte[] brd, int pos) { 
