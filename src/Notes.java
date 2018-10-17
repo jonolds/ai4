@@ -7,8 +7,8 @@ public class Notes {
 	
 	
 	int minimax(byte[] node, int depth, boolean maxTurn) {
-		if(depth == 9)
-			return 9999; //the heuristic value of node
+		if(depth == 0)
+			return getWinner(node);
 		if(maxTurn) {
 			int value = Integer.MIN_VALUE;
 			for(byte bt: node) 	// each child of node do
