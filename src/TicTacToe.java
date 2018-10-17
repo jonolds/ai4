@@ -1,9 +1,11 @@
+import java.util.Random;
 import java.util.Scanner;
 
 public class TicTacToe {
+	Random r = new Random();
 	Scanner sc;
 	int moves_left = 9;
-	byte[] board = new byte[] {1,2,3,4,5,6,7,8,9};
+	byte[] board;
 
 	void play() {
 		drawBoard();
@@ -16,9 +18,20 @@ public class TicTacToe {
 		results();
 	}
 	
+	void playRandomHuman() {
+		drawBoard();
+		humanRandom();
+		for(int i = 0; i < 4; i++) {
+			aiMove();
+			drawBoard();
+			humanRandom();
+		}
+		results();
+	}
+	
 	void aiMove() {
 		drawBoard();
-		setO(minimax(getStCopy(board), moves_left, true, true));
+		setO(board, minimax(copyBoard(board), moves_left, true, true));
 	}
 	
 	int minimax(byte[] node, int depth, boolean maxTurn, boolean top) {
@@ -29,7 +42,9 @@ public class TicTacToe {
 			int value = Integer.MIN_VALUE;
 			for(int i = 0; i < 9; i++) 	// each child of node do
 				if(node[i] < 59) {
-					int mm_value = minimax(node, depth-1, false, false);
+					byte[] tmp = copyBoard(node);
+					tmp[i] = 'O';
+					int mm_value = minimax(tmp, depth-1, false, false);
 					if(mm_value > value) {
 						value = mm_value;
 						best_move = i;
@@ -44,7 +59,9 @@ public class TicTacToe {
 			int value = Integer.MAX_VALUE;
 			for(int i = 0; i < 9; i++)
 				if(node[i] < 59) {
-					int mm_value = minimax(node, depth-1, true, false);
+					byte[] tmp = copyBoard(node);
+					tmp[i] = 'X';
+					int mm_value = minimax(tmp, depth-1, true, false);
 					if(mm_value < value) {
 						value = mm_value;
 						best_move = i;
@@ -69,13 +86,28 @@ public class TicTacToe {
 				break;
 			sc.reset();
 		}
-		setX(pos - 1);
+		setX(board, pos - 1);
 	}
 	
-	void setX(int pos) { board[pos] = 'X'; moves_left--;}
-	void setO(int pos) { board[pos] = 'O'; moves_left--;}
+	void humanRandom() {
+		int pos = r.nextInt(9);
+		while(board[pos] > 58) {
+			pos = r.nextInt(9);
+		}
+		System.out.print("Your move: " + pos+1);
+		setX(board, pos);
+	}
 	
-	byte[] getStCopy(byte[] bArr) { return bArr.clone(); }
+	void setX(byte[] brd, int pos) { 
+		brd[pos] = 'X'; 
+		moves_left--;
+	}
+	void setO(byte[] brd, int pos) { 
+		brd[pos] = 'O'; 
+		moves_left--;
+	}
+	
+	byte[] copyBoard(byte[] bArr) { return bArr.clone(); }
 	int getWinner(byte[] s) {
 		byte[] win_rows = new byte[] {s[0],s[1],s[2],  s[3],s[4],s[5],  s[6],s[7],s[8],  s[0],s[3],s[6],
 									  s[1],s[4],s[7],  s[2],s[5],s[8],  s[0],s[4],s[8],  s[2],s[4],s[6]};
@@ -104,7 +136,8 @@ public class TicTacToe {
 	}
 	char ch(byte b) { return (b < 58) ? Byte.toString(b).charAt(0) : (char)b; }
 
-	TicTacToe() { 
+	TicTacToe() {
+		board = new byte[] {1,2,3,4,5,6,7,8,9};
 		sc = new Scanner(System.in);
 		moves_left = countOpenSpaces(board);
 	}
@@ -116,8 +149,12 @@ public class TicTacToe {
 		return count;
 	}
 	public static void main(String[] args) {
-		TicTacToe game = new TicTacToe();
-		game.play();
+//		TicTacToe game = new TicTacToe();
+//		game.play();
+		for(int i =0; i<1000; i++) {
+			TicTacToe game = new TicTacToe();
+			game.playRandomHuman();
+		}
 	}
 }
 
