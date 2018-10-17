@@ -16,14 +16,6 @@ public class TicTacToe {
 		results();
 	}
 	
-	void results() {
-		System.out.println("\n***FINAL BOARD***");
-		drawBoard();
-		System.out.println("moves_left: " + moves_left);
-		System.out.println("winner: " + getWinner(board) + "\n");
-		sc.close();
-	}
-	
 	void aiMove() {
 		drawBoard();
 		setO(minimax(getStCopy(board), moves_left, true, true));
@@ -93,6 +85,14 @@ public class TicTacToe {
 		return 0;
 	}
 	
+	void results() {
+		System.out.println("\n***FINAL BOARD***");
+		drawBoard();
+		System.out.println("moves_left: " + moves_left);
+		System.out.println("winner: " + getWinner(board) + "\n");
+		sc.close();
+	}
+	
 	void drawBoard() {
 		System.out.println();
 		System.out.println("*****MOVES LEFT=" + moves_left);
@@ -121,7 +121,7 @@ public class TicTacToe {
 	}
 }
 
-
+//************Test code for board copy function
 //byte[] test1 = getStCopy(board);
 //test1[3] = 'q';
 //System.out.print("\ntest1: ");
