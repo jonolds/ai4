@@ -1,26 +1,37 @@
+import java.util.Random;
 import java.util.Scanner;
 
 public class TicTacToe {
+	Random r = new Random();
 	Scanner sc;
 	int moves_left = 9;
-	byte[] board = new byte[] {1,2,3,4,5,6,7,8,9};
+	byte[] board;
 
 	void play() {
 		drawBoard();
 		humanMove();
 		for(int i = 0; i < 4; i++) {
 			aiMove();
+			drawBoard();
 			humanMove();
 		}
-		if(getWinner(board) == 0)
-			System.out.println("tie");
-		sc.close();
-		
+		results();
+	}
+	
+	void playRandomHuman() {
+		drawBoard();
+		humanRandom();
+		for(int i = 0; i < 4; i++) {
+			aiMove();
+			drawBoard();
+			humanRandom();
+		}
+		results();
 	}
 	
 	void aiMove() {
 		drawBoard();
-		setO(minimax(getStCopy(), moves_left, true, true));
+		setO(board, minimax(copyBoard(board), moves_left, true, true));
 	}
 	
 	int minimax(byte[] node, int depth, boolean maxTurn, boolean top) {
@@ -30,13 +41,14 @@ public class TicTacToe {
 		if(maxTurn) {
 			int value = Integer.MIN_VALUE;
 			for(int i = 0; i < 9; i++) 	// each child of node do
-				if(board[i] < 59) {
-					int mm_value = minimax(node, depth-1, false, false);
+				if(node[i] < 59) {
+					byte[] tmp = copyBoard(node);
+					tmp[i] = 'O';
+					int mm_value = minimax(tmp, depth-1, false, false);
 					if(mm_value > value) {
 						value = mm_value;
 						best_move = i;
 					}
-					value = Math.max(value, minimax(node, depth-1, false, false));
 				}
 			if(top)
 				return best_move;
@@ -46,8 +58,10 @@ public class TicTacToe {
 		else {
 			int value = Integer.MAX_VALUE;
 			for(int i = 0; i < 9; i++)
-				if(board[i] < 59) {
-					int mm_value = minimax(node, depth-1, true, false);
+				if(node[i] < 59) {
+					byte[] tmp = copyBoard(node);
+					tmp[i] = 'X';
+					int mm_value = minimax(tmp, depth-1, true, false);
 					if(mm_value < value) {
 						value = mm_value;
 						best_move = i;
@@ -72,15 +86,28 @@ public class TicTacToe {
 				break;
 			sc.reset();
 		}
-		setX(pos - 1);
-		drawBoard();
+		setX(board, pos - 1);
 	}
 	
-	void setX(int pos) { board[pos] = 'X'; moves_left--;}
-	void setO(int pos) { board[pos] = 'O'; moves_left--;}
+	void humanRandom() {
+		int pos = r.nextInt(9);
+		while(board[pos] > 58) {
+			pos = r.nextInt(9);
+		}
+		System.out.print("Your move: " + pos+1);
+		setX(board, pos);
+	}
 	
-	byte[] getStCopy() { return board.clone(); }
-	byte[] getStCopy(byte[] bArr) { return bArr.clone(); }
+	void setX(byte[] brd, int pos) { 
+		brd[pos] = 'X'; 
+		moves_left--;
+	}
+	void setO(byte[] brd, int pos) { 
+		brd[pos] = 'O'; 
+		moves_left--;
+	}
+	
+	byte[] copyBoard(byte[] bArr) { return bArr.clone(); }
 	int getWinner(byte[] s) {
 		byte[] win_rows = new byte[] {s[0],s[1],s[2],  s[3],s[4],s[5],  s[6],s[7],s[8],  s[0],s[3],s[6],
 									  s[1],s[4],s[7],  s[2],s[5],s[8],  s[0],s[4],s[8],  s[2],s[4],s[6]};
@@ -90,9 +117,17 @@ public class TicTacToe {
 		return 0;
 	}
 	
+	void results() {
+		System.out.println("\n***FINAL BOARD***");
+		drawBoard();
+		System.out.println("moves_left: " + moves_left);
+		System.out.println("winner: " + getWinner(board) + "\n");
+		sc.close();
+	}
+	
 	void drawBoard() {
 		System.out.println();
-		System.out.println("*****MOVES MADE=" + moves_left);
+		System.out.println("*****MOVES LEFT=" + moves_left);
 		System.out.println(" " + ch(board[0]) + " | " + ch(board[1]) + " | " + ch(board[2]) + " ");
 		System.out.println("---+---+---");
 		System.out.println(" " + ch(board[3]) + " | " + ch(board[4]) + " | " + ch(board[5]) + " ");
@@ -101,9 +136,34 @@ public class TicTacToe {
 	}
 	char ch(byte b) { return (b < 58) ? Byte.toString(b).charAt(0) : (char)b; }
 
-	TicTacToe() { sc = new Scanner(System.in);}
+	TicTacToe() {
+		board = new byte[] {1,2,3,4,5,6,7,8,9};
+		sc = new Scanner(System.in);
+		moves_left = countOpenSpaces(board);
+	}
+	int countOpenSpaces(byte[] brd) {
+		int count = 0;
+		for(byte b: brd)
+			if(b < 59)
+				count++;
+		return count;
+	}
 	public static void main(String[] args) {
-		TicTacToe game = new TicTacToe();
-		game.play();
+//		TicTacToe game = new TicTacToe();
+//		game.play();
+		for(int i =0; i<1000; i++) {
+			TicTacToe game = new TicTacToe();
+			game.playRandomHuman();
+		}
 	}
 }
+
+//************Test code for board copy function
+//byte[] test1 = getStCopy(board);
+//test1[3] = 'q';
+//System.out.print("\ntest1: ");
+//for(int i = 0; i < 9; i++)
+//	System.out.print(test1[i] + ", ");
+//System.out.print("\nboard: ");
+//for(int i = 0; i < 9; i++)
+//	System.out.print(board[i] + ", ");
