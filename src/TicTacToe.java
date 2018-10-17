@@ -19,18 +19,18 @@ public class TicTacToe {
 	}
 	
 	void playRandomHuman() {
-		drawBoard();
+//		drawBoard();
 		humanRandom();
 		for(int i = 0; i < 4; i++) {
 			aiMove();
-			drawBoard();
+//			drawBoard();
 			humanRandom();
 		}
 		results();
 	}
 	
 	void aiMove() {
-		drawBoard();
+//		drawBoard();
 		setO(board, minimax(copyBoard(board), moves_left, true, true));
 	}
 	
@@ -94,7 +94,7 @@ public class TicTacToe {
 		while(board[pos] > 58) {
 			pos = r.nextInt(9);
 		}
-		System.out.print("Your move: " + pos+1);
+//		System.out.print("Your move: " + pos+1);
 		setX(board, pos);
 	}
 	
@@ -118,10 +118,12 @@ public class TicTacToe {
 	}
 	
 	void results() {
-		System.out.println("\n***FINAL BOARD***");
-		drawBoard();
-		System.out.println("moves_left: " + moves_left);
-		System.out.println("winner: " + getWinner(board) + "\n");
+//		System.out.println("\n***FINAL BOARD***");
+//		drawBoard();
+//		System.out.println("moves_left: " + moves_left);
+//		System.out.println("winner: " + getWinner(board) + "\n");
+		
+		System.out.println("winner: " + getWinner(board));
 		sc.close();
 	}
 	
