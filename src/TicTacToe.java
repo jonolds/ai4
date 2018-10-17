@@ -19,16 +19,22 @@ public class TicTacToe {
 	}
 	
 	void playRandomHuman() {
-//		drawBoard();
 		humanRandom();
 		for(int i = 0; i < 4; i++) {
 			aiMove();
-//			drawBoard();
 			humanRandom();
 		}
 		results();
 	}
 	
+	void playHumanBot() {
+		humanBot();
+		for(int i = 0; i < 4; i++) {
+			aiMove();
+			humanBot();
+		}
+		results();
+	}
 	void aiMove() {
 //		drawBoard();
 		setO(board, minimax(copyBoard(board), moves_left, true, true));
@@ -98,6 +104,10 @@ public class TicTacToe {
 		setX(board, pos);
 	}
 	
+	void humanBot() {
+		setX(board, minimax(copyBoard(board), moves_left, true, true));
+	}
+	
 	void setX(byte[] brd, int pos) { 
 		brd[pos] = 'X'; 
 		moves_left--;
@@ -155,7 +165,7 @@ public class TicTacToe {
 //		game.play();
 		for(int i =0; i<1000; i++) {
 			TicTacToe game = new TicTacToe();
-			game.playRandomHuman();
+			game.playHumanBot();
 		}
 	}
 }
