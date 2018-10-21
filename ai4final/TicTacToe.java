@@ -7,7 +7,7 @@ public class TicTacToe {
 	int moves_left = 9;
 	byte[] board = new byte[] {1,2,3,4,5,6,7,8,9};
 	int[] move_history = new int[9];
-	boolean show_board = true;
+	boolean show_board = true, show_final_board = true;
 
 	void play() {
 		drawBoard();
@@ -100,19 +100,47 @@ public class TicTacToe {
 		int winner = getWinner(board);
 		show_board = true;
 		System.out.println((winner == 0) ? "TIE GAME" : (winner == 1) ? "AI WINS" : "HUMAN WINS");
-		showAllMoves();
+		showFinal();
 		reset();
+	}
+	
+	TicTacToe() {
+		show_board = true;
+		show_final_board = true;
 	}
 	
 	public static void main(String[] args) {
 //		(new TicTacToe()).play();
-//		(new TicTacToe()).testRandomHuman(10000);
-		(new TicTacToe()).testOptimalHuman(1, false);
+		(new TicTacToe()).testRandomHuman(1);
+//		(new TicTacToe()).testOptimalHuman(1);
 	}
 
 	
 /* UTILITIES==================================== */
-	char ch(byte b) { return (b < 58) ? Byte.toString(b).charAt(0) : (char)b; }
+	char ch(byte b) { 
+		if(b > 47 && b < 58)
+			return Byte.toString(b).charAt(0);
+		else
+			return (char)b;
+	}
+	
+	
+//	String ch(byte b) { 
+//		System.out.println(b);
+////		if(b > 47 && b < 58) {
+//		if(b < 10) {
+////			System.out.println(Byte.toString(b).charAt(0) + Byte.toString(b).charAt(0));
+////			return Byte.toString(b).charAt(0);
+//			return Byte.toString(b);
+//		}
+////			return b;
+//		else {
+//			return String.valueOf(b);
+////			return " ";
+////			return (char)b;
+//		}
+//		
+//	}
 	
 	byte[] copyBoard(byte[] bArr) { return bArr.clone(); }
 	
@@ -124,29 +152,33 @@ public class TicTacToe {
 			System.out.println(" " + ch(board[6]) + " | " + ch(board[7]) + " | " + ch(board[8]) + "\n---+---+---");
 		}
 	}
-	
-	
-	void showAllMoves() {
-		int num = 9 - moves_left;
-		String[] str = new String[] {"", "", "", "", "", ""};
-		byte[] tmp_board = new byte[] {1,2,3,4,5,6,7,8,9};
-		boolean is_human = true;
-		for(int i = 0; i < num; i++) {
-			int space_num = move_history[i];
-			char piece = (is_human) ? 'X' : 'O';
-			tmp_board[space_num] = (byte)piece;
-			
-			str[0] += "LEFT=" + (8-i) + "       ";
-			str[1] += " " + ch(tmp_board[0]) + " | " + ch(tmp_board[1]) + " | " + ch(tmp_board[2]) + "   ";
-			str[2] += "---+---+---  ";
-			str[3] += " " + ch(tmp_board[3]) + " | " + ch(tmp_board[4]) + " | " + ch(tmp_board[5]) + "   ";
-			str[4] += "---+---+---  ";
-			str[5] += " " + ch(tmp_board[6]) + " | " + ch(tmp_board[7]) + " | " + ch(tmp_board[8]) + "   ";
-			is_human = !is_human;
-		}
-		for(int i = 0; i < 6; i++)
-			System.out.println(str[i]);
-		
+	void showFinal() {
+		if(show_final_board) {
+			int num = 9 - moves_left;
+			String[] str = new String[] {"", "", "", "", "", ""};
+			byte[] tmp_board = new byte[] {(byte)' ',(byte)' ',(byte)' ',(byte)' ',(byte)' ',(byte)' ',(byte)' ',(byte)' ',(byte)' '};
+			boolean is_human = true;
+			for(int i = 0; i < num; i++) {
+				int space_num = move_history[i];
+				char piece = (is_human) ? 'X' : 'O';
+				tmp_board[space_num] = (byte)piece;
+				
+				str[0] += "LEFT=" + (8-i) + "       ";
+				str[1] += " " + ch(tmp_board[0]) + " | " + ch(tmp_board[1]) + " | " + ch(tmp_board[2]) + "   ";
+				str[2] += "---+---+---  ";
+				str[3] += " " + ch(tmp_board[3]) + " | " + ch(tmp_board[4]) + " | " + ch(tmp_board[5]) + "   ";
+				str[4] += "---+---+---  ";
+				str[5] += " " + ch(tmp_board[6]) + " | " + ch(tmp_board[7]) + " | " + ch(tmp_board[8]) + "   ";
+				is_human = !is_human;
+				
+				
+				
+			}
+			System.out.println();
+			for(int i = 0; i < 6; i++)
+				System.out.println(str[i]);
+			System.out.println();
+		}	
 	}
 	
 	void reset() {
@@ -158,9 +190,9 @@ public class TicTacToe {
 /* TESTING===============================================*/
 	
 	/* RANDOM HUMAN TESTING */
-	void testRandomHuman(int num_of_games, boolean show_moves) {
+	void testRandomHuman(int num_of_games) {
+//		show_final = false;
 		for(int i = 0; i < num_of_games; i++) {
-			show_board = show_moves;
 			randomHumanMove();
 			while(moves_left > 0 && getWinner(board) == 0) {
 				aiMove();
@@ -182,9 +214,8 @@ public class TicTacToe {
 	}
 	
 	/* OPTIMAL HUMAN TESTING  */
-	void testOptimalHuman(int num_of_games, boolean show_moves) {
+	void testOptimalHuman(int num_of_games) {
 		for(int i = 0; i < num_of_games; i++) {
-			show_board = show_moves;
 			optimalHumanMove();
 			while(moves_left > 0 && getWinner(board) == 0) {
 				aiMove();
